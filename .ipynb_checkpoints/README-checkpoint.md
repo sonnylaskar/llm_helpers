@@ -52,13 +52,29 @@ The following script demonstrates how to use the `llm_helpers` package to genera
 
 ```python
 import llm_helpers
+import requests
+import os
+
+url = "https://raw.githubusercontent.com/sonnylaskar/llm_helpers/main/sample_text.txt"
+file_path = "sample_text.txt"
+
+# Check if the file already exists
+if not os.path.exists(file_path):
+    response = requests.get(url)
+    
+    # Ensure the request was successful
+    if response.status_code == 200:
+        with open(file_path, "w", encoding="utf-8") as file:
+            file.write(response.text)
+        print("File downloaded successfully!")
+    else:
+        print(f"Failed to download the file. Status code: {response.status_code}")
 
 # Open the file in read mode
 with open('sample_text.txt', 'r') as file:
     # Read the entire contents of the file into a string
     txt = file.read()
-
-# Update the <> below with the correct values
+    
 categories = llm_helpers.generate_categories(txt, 
                                              llm = 'azure', 
                                              endpoint = "<azure_endpoint>", 
